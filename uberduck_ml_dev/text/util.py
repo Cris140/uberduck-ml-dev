@@ -75,6 +75,10 @@ def listToString(text):
         str1 += ele  
     return str1 
 
+def convert_num_to_words(utterance):
+    utterance = ' '.join([num2words.num2words(i ,lang='pt_BR') if i.isdigit() else i for i in utterance.split()])
+    return utterance
+    
 # List of (regular expression, replacement) pairs for abbreviations:
 _abbreviations = [
     (re.compile("\\b%s\\." % x[0], re.IGNORECASE), x[1])
