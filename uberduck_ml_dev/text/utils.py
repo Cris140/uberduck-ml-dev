@@ -11,6 +11,7 @@ __all__ = [
     "transliteration_cleaners",
     "english_cleaners",
     "english_cleaners_phonemizer",
+    'portuguese_cleaners_phonemizer'
     "batch_english_cleaners_phonemizer",
     "g2p",
     "batch_clean_text",
@@ -43,10 +44,14 @@ hyperparameter. Some cleaners are English-specific. You'll typically want to use
 
 import re
 from typing import List
-
+import num2words
 from g2p_en import G2p
 from phonemizer import phonemize
 from unidecode import unidecode
+from phonemizer.punctuation import Punctuation
+from phonemizer.backend import EspeakBackend
+from phonemizer.separator import Separator, default_separator
+from phonemizer import phonemize
 import torch
 
 from .symbols import curly_re, words_re, symbols_to_sequence
@@ -55,6 +60,20 @@ g2p = G2p()
 
 # Regular expression matching whitespace:
 _whitespace_re = re.compile(r"\s+")
+
+#phonemizer backend for PT-BR text
+backendptbr = EspeakBackend('pt-br',
+    preserve_punctuation=True,
+    punctuation_marks=Punctuation.default_marks(),
+    with_stress=True,
+    )
+
+# Convert list into string 
+def listToString(text):  
+    str1 = ""      
+    for ele in text: 
+        str1 += ele  
+    return str1 
 
 # List of (regular expression, replacement) pairs for abbreviations:
 _abbreviations = [
@@ -189,6 +208,62 @@ def basic_cleaners(text):
     """Basic pipeline that lowercases and collapses whitespace without transliteration."""
     text = lowercase(text)
     text = collapse_whitespace(text)
+    res = re.sub('(\d+(\.\d+)?)', r' \1 ', text)
+    res = res.strip()
+    text = (convert_num_to_words(res))
+    text = text + "."
+    text = text.replace("!.","!")
+    text = text.replace("?.","?")
+    text = text.replace("..",".")
+    text = text.replace("pizza","pitza")
+    text = text.replace("gay","g-ei")
+    text = text.replace("quilômetro","quilôme tro")
+    text = text.replace("quilômetros","quilôme tros")
+    text = text.replace("sexo","sécsso")
+    text = text.replace("maquina","má qui na")
+    text = text.replace("maquinas","má qui nas")
+    text = text.replace("boxe","bócçi")
+    text = text.replace("boxeador","boucçiador")
+    text = text.replace("site","saite")
+    text = text.replace("youtube","iutube")
+    text = text.replace("twitter","tuiiter")
+    text = text.replace("pneu","pineu")
+    text = text.replace("twitter","tuiiter")
+    text = text.replace("bissexual","bisecssual")
+    text = text.replace("facebook","feice buqui")
+    text = text.replace("homossexual","homossecssual")
+    text = text.replace("instagram ","insta gram")
+    text = text.replace("abelha","abeelha")
+    text = text.replace("falatron","fala tron")
+    text = text.replace("fake","fei que")
+    text = text.replace("news","nius")
+    text = text.replace("nerd","nerdi")
+    text = text.replace("whatsapp","uatizapi")
+    text = text.replace("whats app","uatizapi")
+    text = text.replace("parede","pareede")
+    text = text.replace("pikachu","pica chu")
+    text = text.replace("oxigênio","ócssigênio")
+    text = text.replace("flash","fléshi")
+    text = text.replace("aqua","ácua")
+    text = text.replace("banner","bêner")
+    text = text.replace("batman","batímãn")
+    text = text.replace("alboghetti","alborg-éti")
+    text = text.replace("game","gueime")
+    text = text.replace("ok","óquei")
+    text = text.replace("like","laique")
+    text = text.replace("dislike","dislaique")
+    text = text.replace("bêbê","bee bee")
+    text = text.replace("mj","êmi jêi")
+    text = text.replace("garoto","garooto")
+    text = text.replace("quatorze","quatoorze")
+    text = text.replace("catorze","catoorze")
+    text = text.replace("lider","lideer")
+    text = text.replace("teimoso","teimooso")
+    text = text.replace("nft","eni éfi têê")
+    text = text.replace("porra","po ra")
+    text = text.replace("knuckles","nãcous")
+    text = text.replace("%","porcentajen")
+    text = text.replace("man","mãn")
     return text
 
 
@@ -234,6 +309,13 @@ def english_cleaners_phonemizer(text):
     text = collapse_whitespace(text)
     return text
 
+def portuguese_cleaners_phonemizer(text):
+    text = lowercase(text)
+    text = collapse_whitespace(text)
+    text = [text]
+    text = backendptbr.phonemize(text)
+    text = listToString(text)
+    return text
 
 def batch_english_cleaners_phonemizer(text: List[str]):
     batch = []
@@ -277,6 +359,7 @@ CLEANERS = {
     "basic_cleaners": basic_cleaners,
     "turkish_cleaners": turkish_cleaners,
     "transliteration_cleaners": transliteration_cleaners,
+    "portuguese_cleaners_phonemizer": portuguese_cleaners_phonemizer,
 }
 
 

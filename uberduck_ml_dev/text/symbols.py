@@ -15,6 +15,8 @@ __all__ = [
     "RUSSIAN_SYMBOLS",
     "symbols_ukrainian",
     "UKRAINIAN_SYMBOLS",
+    'LEGACY_PORTUGUESE_SYMBOLS',
+    'symbols_legacy_portuguese',
     "symbols",
     "symbols_nvidia_taco2",
     "symbols_with_ipa",
@@ -73,6 +75,20 @@ symbols_portuguese = (
 )
 
 PORTUGUESE_SYMBOLS = "portuguese"
+
+##
+_legacy_portuguese = 'áàãâéèêíìîóòõôúùûçÇTUVWXYZabcdefghijklmnopqrstuvwxyz'
+_legacy_portuguese_punctuation = _punctuation = '!\'(),.:;? '
+
+symbols_legacy_portuguese = (
+    [_pad]
+    + list(_special_nvidia_taco2)
+    + list(_legacy_portuguese_punctuation)
+    + list(_legacy_portuguese)
+    + _arpabet
+)
+
+LEGACY_PORTUGUESE_SYMBOLS = "legacy_portuguese"
 
 ##
 
@@ -210,6 +226,7 @@ SYMBOL_SETS = {
     TURKISH_SYMBOLS: symbols_turkish,
     RUSSIAN_SYMBOLS: symbols_russian,
     UKRAINIAN_SYMBOLS: symbols_ukrainian,
+    LEGACY_PORTUGUESE_SYMBOLS: symbols_legacy_portuguese,
 }
 
 
@@ -230,6 +247,7 @@ symbol_to_id = {
     TURKISH_SYMBOLS: {s: i for i, s in enumerate(SYMBOL_SETS[TURKISH_SYMBOLS])},
     RUSSIAN_SYMBOLS: {s: i for i, s in enumerate(SYMBOL_SETS[RUSSIAN_SYMBOLS])},
     UKRAINIAN_SYMBOLS: {s: i for i, s in enumerate(SYMBOL_SETS[UKRAINIAN_SYMBOLS])},
+    LEGACY_PORTUGUESE_SYMBOLS: {s: i for i, s in enumerate(SYMBOL_SETS[LEGACY_PORTUGUESE_SYMBOLS])},
 }
 id_to_symbol = {
     DEFAULT_SYMBOLS: {i: s for i, s in enumerate(SYMBOL_SETS[DEFAULT_SYMBOLS])},
@@ -246,6 +264,7 @@ id_to_symbol = {
     TURKISH_SYMBOLS: {i: s for i, s in enumerate(SYMBOL_SETS[TURKISH_SYMBOLS])},
     RUSSIAN_SYMBOLS: {i: s for i, s in enumerate(SYMBOL_SETS[RUSSIAN_SYMBOLS])},
     UKRAINIAN_SYMBOLS: {i: s for i, s in enumerate(SYMBOL_SETS[UKRAINIAN_SYMBOLS])},
+    LEGACY_PORTUGUESE_SYMBOLS: {i: s for i, s in enumerate(SYMBOL_SETS[LEGACY_PORTUGUESE_SYMBOLS])},
 }
 
 curly_re = re.compile(r"(.*?)\{(.+?)\}(.*)")

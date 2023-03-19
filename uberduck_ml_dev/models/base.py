@@ -23,14 +23,23 @@ class TTSModel(nn.Module):
         raise NotImplemented
 
     def from_pretrained(
-        self, warm_start_path=None, device="cpu", ignore_layers=None, model_dict=None
+        self, warm_start_path=None, device="cpu", ignore_layers=None, model_dict=None, modelo=None,
     ):
 
         model_dict = model_dict or dict()
-        if warm_start_path is None and model_dict is None:
+        if warm_start_path is None and model_dict is None and modelo is None:
             raise Exception(
                 "TTSModel.from_pretrained requires a warm_start_path or state_dict"
             )
+            
+        if modelo is not None:
+            checkpoint = modelo
+            if (
+                "state_dict" in checkpoint.keys()
+            ):  # TODO: remove state_dict once off nvidia
+                model_dict = checkpoint["state_dict"]
+            if "model" in checkpoint.keys():
+                model_dict = checkpoint["model"]
         if warm_start_path is not None:
             checkpoint = torch.load(warm_start_path, map_location=device)
             if (
