@@ -54,7 +54,7 @@ from phonemizer.backend import EspeakBackend
 from phonemizer.separator import Separator, default_separator
 from phonemizer import phonemize
 from unidecode import unidecode
-
+from num2words import num2words
 from .symbols import curly_re, words_re, symbols_to_sequence
 
 g2p = G2p()
